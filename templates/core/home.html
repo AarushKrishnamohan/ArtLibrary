@@ -1,0 +1,129 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<!--Main Container-->
+<div class="container-fluid">
+    <div class="row py-4 px-3 d-flex flex-row align-items-center text-light" style="background-color: black;">
+        <div class="col">
+            <h3>Art is life</h3>
+            <p>Enter a world where creativity knows no bounds—a treasury of artistic expression awaits your curiosity. This is a sanctuary where the strokes of history, the palettes of the masters, and the visions of contemporary artists coalesce. Within these walls, every book is a doorway to new worlds, each page a canvas for inspiration. Explore the chronicles of art, from the classical to the avant-garde, and let your imagination unfurl among the masterpieces that have shaped our visual heritage. Delight in the art of learning, and may your journey through this library enrich the tapestry of your own creativity.</p>
+        </div>
+        <div class="col">
+            <img src="{% static 'img/art1.webp' %}" alt="" width="500px">
+        </div>
+    </div>
+</div>
+<!--newly added Art-->
+<h3 class="text-center mt-5">Newly Added</h3>
+<div class="container-fluid py-5 ps-5" id="user-arts-container">
+    <div class="row">
+        {% for artwork in artworks %}
+        <div class="col">
+            <a href="{% url "artwork-details" pk=artwork.id %}" class="nav-link">
+                <img src="{{artwork.image.url}}" alt="Digital Art">
+                <h4>{{ artwork.title }}</h4>
+                <p class="text-secondary">{{artwork.artist_name}}</p>
+                <h5 class="fs-6">${{ artwork.price }}</h5>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!--Feature Info-->
+<div class="container-fluid ps-5 py-5 d-flex flex-row justify-content-between align-items-center">
+    <div></div>
+    <div class="d-flex flex-column align-items-center justify-content-center">
+        <i class="bi bi-hand-thumbs-up-fill fs-1"></i>
+        <p class="w-75"> Support Emerging Artists</p>
+    </div>
+    <div></div>
+    <div class="d-flex flex-column align-items-center justify-content-center">
+        <i class="bi bi-check-circle-fill fs-1"></i>
+        <p class="w-50">Each Art Print Includes a Certificate of its Authority</p>
+    </div>
+        <div></div>
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-person-check-fill fs-1"></i>
+            <p class="w-75"> Customer Satisfaction is our Number 1 priority.</p>
+        </div>
+        <div></div>
+    </div>
+
+
+<!--view all artworks-->
+    <div class="container-fluid py-5" id="user-arts-container">
+        <div class="row">
+            <div class="col">
+                <img src='{% static "img/art2.jpg" %}' alt="Digital Art">
+                <h4>Sea of theives</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$150.99</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art3.jpg" %}' alt="Digital Art">
+                <h4>Stairway to Heaven</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$250.97</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art4.webp" %}' alt="Digital Art">
+                <h4>Haunted House</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$188.33</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art3.png" %}' alt="Digital Art">
+                <h4>Alto's Odyssey</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$138.44</h5>
+            </div>
+
+            <div id="view-all-btn" class="d-flex flex-row align-items-center justify-content-center mb-4">
+                <button class="btn btn-outline-dark">View All Artwork </button>
+            </div>
+    </div>
+    </div>
+
+<!--Artist of the Month-->
+<div class="container-fluid text-light pt-4 pb-5" style="background-color: black;">
+    <div class="container">
+        <h3 class="text-center">Artist of the month</h3> 
+        <div class="row">
+            <div class="col">
+            <h5> {{ best_artist.user.username }} </h5>
+            <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero iste dolores voluptate ea vel tempora in nesciunt nemo repudiandae placeat animi tempore repellat ipsum dolorum, repellendus minus error quae, ut necessitatibus consectetur iure unde quibusdam! Magni velit excepturi cumque quo cupiditate soluta, reiciendis mollitia. Omnis cum officiis non laborum? Neque repudiandae reprehenderit atque quae quos minus, ducimus soluta sapiente consectetur animi praesentium iure incidunt! Numquam accusantium eos nostrum facilis. Quaerat eaque quos impedit magni. Velit exercitationem saepe atque accusamus deserunt error cumque reprehenderit laboriosam aut eum eligendi, officiis fugit ab provident omnis? Sed velit quod incidunt exercitationem animi officia quos consequatur, voluptatibus quidem eaque nobis ut dolores ratione deleniti. Lorem ipsum dolor sit amet consectetur adipisicing elit. In debitis dolores, labore eaque magni minus error libero? Facere aperiam sequi optio minima provident natus id. </p>
+            </div> 
+            <div class="col">
+                <img src="{{ best_artist.profile_picture.url }}" alt="" width="450" height="450">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<h3 class="text-center pt-4">Artworks of Author</h3>
+<div class="container-fluid py-5 " id="user-arts-container">
+    <div class="row">
+        <div class="col">
+            <img src='{% static "img/art2.jpg" %}' alt="Digital Art">
+            <h4>Sea of theives</h4>
+            <p>Author</p>
+            <h5 class="text-secondary fs-6">$150.99</h5>
+        </div>
+        <div class="col"><img src='{% static "img/art3.jpg" %}' alt="Digital Art">
+            <h4>Stairway to Heaven</h4>
+            <p>Author</p>
+            <h5 class="text-secondary fs-6">$250.97</h5>
+        </div>
+        <div class="col"><img src='{% static "img/art4.webp" %}' alt="Digital Art">
+            <h4>Haunted House</h4>
+            <p>Author</p>
+            <h5 class="text-secondary fs-6">$188.33</h5>
+        </div>
+        <div class="col"><img src='{% static "img/art3.png" %}' alt="Digital Art">
+            <h4>Alto's Odyssey</h4>
+            <p>Author</p>
+            <h5 class="text-secondary fs-6">$138.44</h5>
+        </div>
+    </div>
+</div>
+{% endblock content %}

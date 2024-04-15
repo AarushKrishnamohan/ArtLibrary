@@ -1,0 +1,154 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="h-100 h-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <!-- Individual Cart Items -->
+                        <div class="row">
+                            <div class="col-lg-7">
+                                <h5 class="mb-3"><a href="" class="text-body">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    Continue Shopping
+                                    </a>
+                                </h5>
+                                <hr>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <p class="mb-1">Shopping Cart</p>
+                                        <p class="mb-0">You have {{ count }} Items in your Cart.</p>
+                                    </div>
+
+                                    <div>
+                                        <p class="mb-0"><span class="text-muted">Sort by: </span>
+                                        <a href="" class="text-body">price <i class="bi bi-arrow-down mt-1"></i></a></p>
+                                    </div>
+                                </div>
+
+                                {%for item in cart_items %}
+
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justiy-content-between">
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div>
+                                                    <img src="{{ item.artwork.image.url }}" alt="Cart Item" class="img-fluid rounded-3" style="width: 65px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="ms-3">
+                                                <h5 class="fw-semibold">{{ item.artwork.title}}</h5>
+                                                <p class="small mb-0">{{ item.artwork.artist}}</p>
+                                            </div>
+
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div style="width: 50px;">
+                                                    <h5 class="fw-normal mb-0">{{ item.quantity}}</h5>
+                                                </div>
+                                                <div style="width: 80px;">
+                                                    <h5 class="mb-0">{{item.item_total}}</h5>
+                                                </div>
+                                                <a href="{% url 'delete-cart-item' item_id=item.id %}" style="color: gray;"><i class="bi bi-trash"></i></a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="card bg-primary text-white rounded-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <h5 class="mb-0">Card Details</h5>
+                                            <img src="{% static 'img/featured-artist.jpg' %}" alt="Avatar" class="img-fluid rounded-3" style="width: 45px;">
+                                        </div>
+
+                                        <p class="small mb-2">Card Type</p>
+                                        <a href="" class="text-white">
+                                            <i class="bi bi-credit-card me-2"></i>
+                                        </a>
+                                        <a href="" class="text-white">
+                                            <i class="bi bi-credit-card-fill me-2"></i>
+                                        </a>
+                                        <a href="" class="text-white">
+                                            <i class="bi bi-credit-card-2-back me-2"></i>
+                                        </a>
+                                        <a href="" class="text-white">
+                                            <i class="bi bi-paypal me-2"></i>
+                                        </a>
+
+                                        <form action="" class="mt-4">
+                                            <div class="form-outline form-white mb-4">
+                                                <input type="text" class="form-control form-control-lg" placeholder="Cardholder's Name" id="typeName">
+                                                <label for="typeName" class="form-label">Cardholder's Name</label>
+                                            </div>
+
+                                            <div class="form-outline form-white mb-4">
+                                                <input type="text" class="form-control form-control-lg" placeholder="1234 5678 9101 1121">
+                                                <label for="typeText" class="form-label">Card Number</label>
+                                            </div>
+
+                                            <div class="row mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" class="form-control form-control-lg" id="typeExp" placeholder="MM/YYYY">
+                                                        <label for="typeExp" class="form-label">Expiration Date</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="password" id="typeText" class="form-control form-control-lg" placeholder="">
+                                                        <label for="typeText" class="form-check">CVV</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <hr class="my-4">
+
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-2">Cart total</p>
+                                            <p class="mb-2">${{cart.cart_total}}</p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-2">Shipping</p>
+                                            <p class="mb-2">${{ shipping_fee }}</p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mb-4">
+                                            <p class="mb-2">Total(Incl. Taxes)</p>
+                                            <p class="mb-2">${{subtotal}}</p>
+                                        </div>
+
+                                        <form action="{% url 'checkout' %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="cart_id" value="{{ cart.id }}">
+                                        <button type="submit" class="btn btn-light btn-lg mx-auto">
+                                            <div class="d-flex justify-content-between align-items-center text-center">
+                                                <span class="me-5">${{subtotal}}</span>
+                                                <span>Checkout <i class="bi bi-box-arrow-right"></i></span>
+                                            </div>
+                                        </button>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

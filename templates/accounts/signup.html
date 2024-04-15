@@ -1,0 +1,86 @@
+{% extends "Accounts/base.html" %}
+
+{%block content%}
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+    <div class="container mt-5">
+        <h3 class="text-center">Art Gallery Sign Up</h3>
+        <br>
+        <div class="notification d-none alert-dismissible fade show w-50 mx-auto" role="alert">
+            <p class="message"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <form method="post" id="signupForm" class="card shadow-sm p-4 d-flex flex-column justify-content-center w-50 mx-auto">
+            {% csrf_token %}
+                <div class="mb-3 w-75">
+                    <label for="exampleInputEmail1" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="John" name="username">
+                </div>
+            <div class="d-flex flex-row justify-content-between">
+                <div class="mb-3 w-75">
+                    <label for="exampleInputEmail1" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="John" name="fname">
+                </div>
+                <div class="mb-3 w-75 ms-2">
+                    <label for="exampleInputPassword1" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1" aria-describedby="emailHelp" placeholder="Doe" name="lname">
+                </div>      
+            </div>
+
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="JohnDoe@gmail.com" name="email">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="" name="password">
+        </div>
+        <div class="mb-3">
+            <label class="form-check-label" for="exampleCheck1">Confirm Password</label> 
+            <input type="password" class="form-control" id="exampleInputPassword1" name="confirm-password">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <br>
+        <hr>
+        <p><a href="{% url 'login' %}">Already Registered. Login Here!</a></p>
+        </form>
+    </div>
+</div>
+
+{% endblock content%}
+
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $('#signupForm').submit(function(e){
+            e.preventDefault()
+
+            let formData = $('#signupForm').serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+            let alert = $('#notification')
+            let alertMessage = $('.notification .message')
+
+            $.ajax({
+                url: '',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                success: function(response){
+                    if (response.type =='Error'){
+                        alert.removeClass('alert-success')
+                        alert.addClass('alert-danger')
+                    } else {
+                        alert.removeClass('alert-danger')
+                        alert.addClass('alert-success')
+                    }
+                    alert.removeClass('d-none')
+                    console.log(response)
+                    alertMessage.text(response.message)
+                }
+            })
+        })
+    })
+
+
+</script>
+{% endblock js %}

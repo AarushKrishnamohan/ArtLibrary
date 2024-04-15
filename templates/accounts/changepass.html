@@ -1,0 +1,24 @@
+{% extends "accounts/base.html" %}
+
+{% block  %}
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+    <div class="container mt-5">
+        <h3 class="text-center">Art Gallery - Password Reset</h3>
+        <br>
+        <form class="card shadow-sm p-4 d-flex flex-column justify-content-center w-50 mx-auto">
+
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">New Password</label>
+                    <input type="Password" class="form-control" id="exampleInputPassword1">
+                </div>      
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Confirm New Password</label>
+                    <input type="Password" class="form-control" id="exampleInputPassword1">
+                </div> 
+            </div>
+        <button class="btn btn-primary w-50 mx-auto">Change Password</button>
+        </form>
+    </div>
+</div>
+
+{% endblock  %}

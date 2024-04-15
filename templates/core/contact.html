@@ -1,0 +1,70 @@
+{% extends "core/base.html" %}
+{% block content %}
+
+<div class="container-fluid p-4">
+    <div class="container text-center">
+        <h3>Contact</h3>
+        <p>Address: Suite 1234 Pacific Commons</p> 
+        <p>Phone: 123-456-7890</p> 
+        <p>Email: aarushk115@gmail.com</p>
+    </div> 
+    <br><br>
+    <div class="container">
+
+        {% include "components/notifications.html" %}
+
+
+
+        <form class="d-flex flex-column justify-content-between align-items-center" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="exampleFormControlInputl" class="form-label" >Name*</label> 
+                <input type="text" class="form-control" id="exampleFormcontrolInput1" placeholder="John Doe..." name="name">
+            </div> 
+            <div class="mb-3">
+                <label for= "exampleFormControlInputi" class="form-label">Email address*</label> 
+                <input type-"email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" name="email">
+            </div> 
+            <div class="mb-3">
+                <label for="exampleFormControlTextareal" class="form-label">Message*</label> 
+                <textarea class= "form-control" id="exampleFormControlTextareal" rows="3" name="message"></textarea>
+            </div>
+            <button class="btn btn-outline-dark" type="submit">Send</button>
+            </form>
+    </div> 
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $('#contactForm').submit(function(e){
+            e.preventDefault()
+
+            let formData = $('#contactForm').serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+            let alert = $('#notification')
+            let alertMessage = $('.notification .message')
+
+            $.ajax({
+                url: '',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                success: function(response){
+                    if (response.type =='Error'){
+                        alert.removeClass('alert-success')
+                        alert.addClass('alert-danger')
+                    } else {
+                        alert.removeClass('alert-danger')
+                        alert.addClass('alert-success')
+                    }
+                    alert.removeClass('d-none')
+                    console.log(response)
+                    alertMessage.text(response.message)
+                }
+            })
+        })
+    })
+</script>
+{% endblock js %}

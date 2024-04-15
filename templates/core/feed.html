@@ -1,0 +1,67 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block css %}
+<style>
+    .user-profile-picture img{
+        border-radius: 40px;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container d-flex flex-column align-items-center justify-content-center my-5">
+    {% for artwork in artworks%}
+    <div class="card shadow-sm w-25 my-4 text-decoration-none">
+        <div class="d-flex align-items-center user-profile-picture p-2">
+            <img src="{% static "img/user.png" %}" alt="User Image" width="60" height="60">
+            <h6 class="mb-0 px-2 fw-semibold">{{ artwork.artist.user.username }}</h6>
+        </div>
+        <a href="{% url "artwork-details" pk=artwork.id %}" target="_blank">
+            <img src="{{ artwork.image.url }}" alt="Art" width="323">
+        </a>
+
+        <form class="likeForm p-2" method="post">
+            {%csrf_token%}
+            <input type="hidden" name="artwork_id" value="{{ artwork.id }}">
+            <button type="submit" style="border: none;"><i class="heart-icon bi bi-heart{% if artist in artwork.likes.all %}-fill text-danger{%endif%} fs-3"></i></button>
+        </form>
+        <p class="p-2"><span class="fw-semibold me-2">{{ artwork.artist.user.username }}:</span>{{ artwork.description }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $('.likeForm').submit(function(e){
+            e.preventDefault()
+
+            let formData = $(this).serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+            let heart = $(this).find('.heart-icon')
+
+            $.ajax({
+                url: '/like-post/',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                success: function(response){
+                    console.log(response)
+                    if(response.type == 'success'){
+                        if(heart.hasClass('bi-heart')){
+                            heart.removeClass('bi-heart')
+                            heart.addClass('bi-heart-fill')
+                            heart.addClass('text-danger')
+                        } else {
+                            heart.removeClass('bi-heart-fill')
+                            heart.removeClass('text-danger')
+                            heart.addClass('bi-heart')
+                        }
+                    }
+                }
+            })
+        })
+    })
+</script>
+{% endblock js %}

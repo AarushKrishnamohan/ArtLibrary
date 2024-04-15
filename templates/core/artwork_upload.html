@@ -1,0 +1,71 @@
+{% extends "core/base.html" %}
+
+
+{% block content %}
+<div class="container w-50">
+    <h1 class="text-center">Upload your Artwork</h1>
+    <br>
+    <div class="notification d-none alert-dismissible fade show w-50 mx-auto" role="alert">
+        <p class="message"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <form action="" method="post" id="artworkForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Title</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Harry Potter Painting" name="title">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Description of Painting" name="description"></textarea>
+        </div>
+        <p>Price</p>
+        <div class="input-group mb-3">
+            <span class="input-group-text">$</span>
+            <input type="text" class="form-control" aria-label="Amount(to the nearest Dollar)" placeholder="$$" name="price">
+            <span class="input-group-text">0.00</span>
+        </div>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Artwork Image</label>
+            <input class="form-control" type="file" id="formFile" name="image">
+        </div>
+        <div class="mb-3 text-center">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block js %}
+<!-- <script>
+    $(document).ready(function(){
+        $('#artworkForm').submit(function(e){
+            e.preventDefault()
+
+            let formData = $('#artworkForm').serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+            let alert = $('#notification')
+            let alertMessage = $('.notification .message')
+
+            $.ajax({
+                url: '',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                success: function(response){
+                    if (response.type =='Error'){
+                        alert.removeClass('alert-success')
+                        alert.addClass('alert-danger')
+                        alert.removeClass('d-none')
+                    } else {
+                        alert.removeClass('alert-danger')
+                        alert.addClass('alert-success')
+                        alertMessage.text(response.message)
+                    }
+                    alertMessage.text(response.message)
+                }
+            })
+        })
+    })
+</script> -->
+{% endblock js %}

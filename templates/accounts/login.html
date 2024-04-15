@@ -1,0 +1,65 @@
+{% extends "accounts/base.html" %}
+
+{%block content%}
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+    <div class="container mt-5">
+        <h3 class="text-center">Art Gallery Login</h3>
+        <br>
+        <div class="notification d-none alert-dismissible fade show w-50 mx-auto" role="alert">
+            <p class="message"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <form id="loginForm"method="post" class="card shadow-sm p-4 d-flex flex-column justify-content-center w-50 mx-auto">
+            {% csrf_token %}
+                <div class="mb-3 w-75">
+                    <label for="exampleInputEmail1" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Johndoe" name="username">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="Password" class="form-control" id="exampleInputPassword1" name="password">
+                </div>      
+            <p class="text-end"><a href="{% url "reset-password" %}"> Forgot Your Password</a></p>
+            <button type="submit" class="btn btn-primary w-50 mx-auto">Login</button>
+        </br>
+        <hr>
+        <p class="text-center"><a href="{% url "signup" %}">Don't have an account? Sign Up Here!</a></p>
+        </form>
+    </div>
+    </div>
+</div>
+{% endblock content%}
+
+
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $('#loginForm').submit(function(e){
+            e.preventDefault()
+
+            let formData = $('#loginForm').serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+            let alert = $('#notification')
+            let alertMessage = $('.notification .message')
+
+            $.ajax({
+                url: '',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                success: function(response){
+                    if (response.type =='Error'){
+                        alert.removeClass('alert-success')
+                        alert.addClass('alert-danger')
+                        alert.removeClass('d-none')
+                        alertMessage.text(response.message)
+                    } else {
+                        window.location.replace("/")
+                    }
+                }
+            })
+        })
+    })
+</script>
+{% endblock js %}

@@ -1,0 +1,133 @@
+{% extends "core/base.html" %}
+{% load static%}
+
+{% block css %}
+<style>
+    .user-profile-image{
+        border: 4px solid black;
+        border-radius: 150px;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col">
+            <img src="{% static "img/user.png" %}" alt="User Profile" width="200px" class="user-profile-image">
+            <div class="d-flex flex-row align-items-center">
+                <h1 class="mt-2 fs-3">{{artist.user.username}}</h1>
+
+                {% if logged_in_artist != artist %}
+                    {% if not conn %}
+                    <form class="mx-4" method="post" id="followUserForm">
+                        {$ csrf_token $}
+                        <input tyhpe="hidden" name="followingId" value="{{ artist.id }}"
+                        <button class="btn btn-sm btn-outline-primary" type="submit">Follow</button>
+                    </form>
+                    {% else %}
+                    <form class="mx-2 d-none" method="post" id="unfollowUserForm">
+                        {$ csrf_token $}
+                        <input tyhpe="hidden" name="followingId" value="{{ artist.id }}"
+                        <button class="btn btn-sm btn-outline-primary" type="submit">Following</button>
+                    </form>
+                    (%endif%)
+                (%endif%)
+
+            </div>
+            <div class="user-followers d-flex flex-row">
+                <p class="text-secondary"><span class="text-dark">{{ followers_count }}</span> Followers </p>
+                <p class="text-secondary mx-4"><span class="text-dark">{{ followings_count }}</span> Following</p>
+            </div>
+            <div class="user-biodata fs-6">
+                <p class="text-secondary">{{artist.user.first_name}} &#8226; {{artist.age}} X &#8226; {{artist.country |default:"USA"}} &#8226; Joined November 5th, 2007</p>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-5" id="user-arts-container">
+        <div class="row">
+            {% for artwork in artworks %}
+            <div class="col">
+                <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}">
+                <h4>{{ artwork.title }}</h4>
+                <p>{{ artwork.artist_name }}</p>
+                <h5 class="text-secondary fs-6">${{ artwork.price }}</h5>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+<!--
+    <div class="container-fluid py-5 " id="user-arts-container">
+        <div class="row">
+            <div class="col">
+                <img src='{% static "img/art2.jpg" %}' alt="Digital Art">
+                <h4>Sea of theives</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$150.99</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art3.jpg" %}' alt="Digital Art">
+                <h4>Stairway to Heaven</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$250.97</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art4.webp" %}' alt="Digital Art">
+                <h4>Haunted House</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$188.33</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art3.png" %}' alt="Digital Art">
+                <h4>Alto's Odyssey</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$138.44</h5>
+            </div>
+        </div>
+    </div>
+-->
+</div>
+{% endblock content %} 
+
+{% block js %}
+<script> 
+    $(document).ready(function(){
+
+        $('#followUserForm').submit(function(e){
+            e.preventDefault()
+            let formData = $('#followUserForm').serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+
+            $.ajax({
+                url: '/follow-user/',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                sucess: function(response){
+                    console.log(response)
+                    window.location.replace("")
+                }
+
+            })
+
+        })
+
+        $('#followUserForm').submit(function(e){
+            e.preventDefault()
+            let formData = $('#unfollowUserForm').serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+
+            $.ajax({
+                url: '/unfollow-user/',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                sucess: function(response){
+                    console.log(response)
+                    window.location.replace("")
+                }
+                
+            })
+        })
+
+    })
+</script>
+{% endblock js %}

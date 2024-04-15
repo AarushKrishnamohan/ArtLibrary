@@ -1,0 +1,120 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block css %}
+<style>
+    .author-link:hover{
+        text-decoration: underline;
+    }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="container my-5">
+    <!--Display individual artwork-->
+    <div class="row">
+        <!--Image first column-->
+        <div class="col">
+            <img src="{{ artwork.image.url }}" alt="Artwork Image" class="w-75">
+        </div>
+        <!--details second column-->
+        <div class="col w-50">
+            <div class="container artwork-details">
+                <h1>{{ artwork.title }}</h1>
+                <p class="text-secondary d-flex flex-row">by <a href="{% url 'author-profile' pk=artwork.artist.id %}" class="author-link nav-link ms-2">{{ artwork.artist_name}}</a></p>
+                <p class="fs-3  ">${{ artwork.price }}</p>
+                <form method="post" action="/add-to-cart/">
+                    {% csrf_token %}
+                    <input type="hidden" name="artwork_id" value="{{ artwork.id }}">
+                    <button class="btn btn-outline-dark w-50" type="submit">Add to Cart</button>
+                </form>
+                <br>
+                <h4>Description</h4>
+                <p>{{ artwork.description }}</p>
+            </div>
+        </div> 
+    </div>
+<!--Comments start here-->
+    <div class="row">
+        <h4>comments</h4>
+        <form method="post" id="commentForm">
+            {% csrf_token %}
+            <input type="hidden" name="artwork_id" value="{{artwork.id}}">
+            <div class="mb-2">
+                <label for="" class="form-check-label mb-2">Post a Comment</label>
+                <textarea name="" class="form-control" id="" cols="10" rows="3"></textarea>
+            </div>
+            <div class="mb-2">
+                <button type="submit" class="btn btn-outline-primary">Post</button>
+            </div>
+        </form>
+        <div class="container-fluid">
+            <div class="card shadow-sm p-4">
+                {% for comment in comments%}
+
+                <h5 class="fs-6 fw-bold"> {{ comment.artist }}<span style="font-size: small;" class="text-secondary">{{ comment.created_at}}</span></h5>
+                <p class="mb-0">{{comment.comment }}</p>
+            </div>
+        </div>
+    </div>
+                {%endfor%}
+<!--Comments end here-->
+    <hr>
+    <!--Row to display similar artworks-->
+    <div class="container-fluid py-5" id="user-arts-container">
+        <h3>Similar Artworks</h3>
+        <br>
+        <div class="row">
+            <div class="col">
+                <img src='{% static "img/art2.jpg" %}' alt="Digital Art">
+                <h4>Sea of theives</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$150.99</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art3.jpg" %}' alt="Digital Art">
+                <h4>Stairway to Heaven</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$250.97</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art4.webp" %}' alt="Digital Art">
+                <h4>Haunted House</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$188.33</h5>
+            </div>
+            <div class="col"><img src='{% static "img/art3.png" %}' alt="Digital Art">
+                <h4>Alto's Odyssey</h4>
+                <p>Author</p>
+                <h5 class="text-secondary fs-6">$138.44</h5>
+            </div>
+
+            <div id="view-all-btn" class="d-flex flex-row align-items-center justify-content-center mb-4">
+                <button class="btn btn-outline-dark">View All Artwork </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $('#commentForm').submit(function(e){
+            e.preventDefault()
+
+            let formData = $('#commentForm').serialize()
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").val()
+
+            $.ajax({
+                url: '/add-comment/',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrfToken},
+                data: formData,
+                success: function(response){
+                    console.log(response)
+                }
+            })
+        })
+    })
+
+
+</script>
+{% endblock js %}
